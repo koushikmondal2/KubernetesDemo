@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Kubernetes/Kubernetes.csproj", "Kubernetes/"]
+COPY ["*.csproj", "Kubernetes/"]
 RUN dotnet restore "Kubernetes/Kubernetes.csproj"
 COPY . .
 WORKDIR "/src/Kubernetes"
