@@ -5,18 +5,16 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
-WORKDIR /src
-COPY ["Kubernetes/Kubernetes.csproj", "Kubernetes/"]
-RUN dotnet restore "Kubernetes/Kubernetes.csproj"
-COPY . .
-WORKDIR "/src/Kubernetes"
-RUN dotnet build "Kubernetes.csproj" -c Release -o /app/build
+COPY *.csproj ./
 
-FROM build AS publish
-RUN dotnet publish "Kubernetes.csproj" -c Release -o /app/publish
+RUN dotnet restore
 
-FROM base AS final
+COPY . ./
+RUN dotnet publish -c Release -o out /property:PublishWithAspNetCoreTargetManifest=false
+
+
+FROM FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.8 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/out ./
+
 ENTRYPOINT ["dotnet", "Kubernetes.dll"]
