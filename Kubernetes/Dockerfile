@@ -11,7 +11,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out /property:PublishWithAspNetCoreTargetManifest=false
 
 
-FROM FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
 COPY --from=build /app/out ./
 
